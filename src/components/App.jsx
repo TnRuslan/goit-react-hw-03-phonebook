@@ -29,16 +29,26 @@ export class App extends Component {
     })  
   }
 
-
-  deletContact = (id) => {
+  deleteContact = (id) => {
     this.setState(prevState => ({
       contacts: prevState.contacts.filter(contact => contact.id !== id)
     }))
   }
-  
 
   filterChange = (e) => {
     this.setState({ filter: e.currentTarget.value })
+  }
+
+  componentDidMount() {
+    const contacts = JSON.parse(localStorage.getItem("contacts"))
+
+    this.setState({contacts})
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      localStorage.setItem("contacts", JSON.stringify(this.state.contacts))
+    }
   }
 
   render() {
@@ -59,7 +69,7 @@ export class App extends Component {
             value={filter}
             onChange={this.filterChange} />
         
-        <ContactsList contacts={filteredContacts} onDeletContact={this.deletContact} />
+        <ContactsList contacts={filteredContacts} onDeletContact={this.deleteContact} />
 
         </div>
     );
